@@ -55,7 +55,7 @@ for event in events:
         phIso = mu.photonIso()
         puIso = mu.puChargedHadronIso()
 
-        relIso = (chIso+nhIso+phIso+0.5*max(0., -puIso))/mu.pt()
+        relIso = (chIso+max(0, nhIso+phIso-0.5*puIso))/mu.pt()
         if relIso > 0.15: continue
 
         isTrigMatched = False
@@ -92,7 +92,7 @@ for event in events:
     phIso = probe.photonIso()
     puIso = probe.puChargedHadronIso()
 
-    relIso = (chIso+nhIso+phIso+0.5*max(0, -puIso))/probe.pt()
+    relIso = (chIso+max(0, nhIso+phIso-0.5*puIso))/probe.pt()
 
     ntuple.Fill(z.mass(), tag.pt(), tag.eta(),
                 probe.pt(), probe.eta(),

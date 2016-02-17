@@ -8,6 +8,9 @@ gROOT.ProcessLine(".x .rootlogon.C")
 #files = ["file:/wk3/cmsdas/store/user/cmsdas/2016/SHORT_EXERCISES/Muons/dymm.root",]
 files = ["file:dymm.root",]
 
+nRecMuon = 0
+nGenMuon = 0
+
 events = Events(files)
 genParticleHandle = Handle("std::vector<reco::GenParticle>")
 muonHandle = Handle('std::vector<pat::Muon>')
@@ -20,6 +23,9 @@ for event in events:
 
     for genP in genParticles:
         if abs(genP.pdgId()) != 13: continue ## Generator level muons only
+        if genP.pt() < 20 or abs(genP.eta()) > 2.4: continue
+
+        nGenMuon += 1
 
         matchedMuon = None
         drMin = 0.5
@@ -28,7 +34,10 @@ for event in events:
             if dr < drMin:
                 drMin = dr
                 matchedMuon = mu
-        
+
         if matchedMuon != None:
-            print  "gen muon (pt=%f eta=%f phi=%f) is matched to pat muon (pt=%f eta=%f phi=%f)" % (genP.pt(), genP.eta(), genP.phi(), matchedMuon.pt(), matchedMuon.eta(), matchedMuon.phi())
+            nRecMuon += 1
+            #print  "gen muon (pt=%f eta=%f phi=%f) is matched to pat muon (pt=%f eta=%f phi=%f)" % (genP.pt(), genP.eta(), genP.phi(), matchedMuon.pt(), matchedMuon.eta(), matchedMuon.phi())
+
+print 1.0*nRecMuon/nGenMuon
 
